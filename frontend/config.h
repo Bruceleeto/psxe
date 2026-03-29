@@ -4,7 +4,6 @@
 #include <stdlib.h>
 
 #include "argparse.h"
-#include "toml.h"
 
 typedef struct {
     int use_args;
@@ -13,9 +12,7 @@ typedef struct {
     int help_region;
     int log_level;
     int quiet;
-    int console_source;
     int scale;
-    const char* snap_path;
     const char* settings_path;
     const char* bios;
     const char* bios_search;
