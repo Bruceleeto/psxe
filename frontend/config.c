@@ -27,9 +27,8 @@ static const char g_default_settings[] =
     "\n"
     "# BIOS-related settings:\n"
     "[bios]\n"
-    "    search_path     = \"bios\"\n"
+    "    search_path     = \"assets\"\n"
     "    preferred_model = \"SCPH-1001\"\n"
-    "    override_file   = \"\"\n"
     "\n"
     "# Console settings\n"
     "[console]\n"
@@ -79,8 +78,8 @@ void psxe_cfg_destroy(psxe_config_t* cfg) {
 }
 
 void psxe_cfg_load_defaults(psxe_config_t* cfg) {
-    cfg->bios = "bios.bin";
-    cfg->bios_search = "bios";
+    cfg->bios = "assets/bios.bin";
+    cfg->bios_search = "assets";
     cfg->exe = NULL;
     cfg->help_model = 0;
     cfg->help_region = 0;
@@ -93,7 +92,7 @@ void psxe_cfg_load_defaults(psxe_config_t* cfg) {
     cfg->version = 0;
     cfg->log_level = LOG_FATAL;
     cfg->quiet = 0;
-    cfg->cd_path = NULL;
+    cfg->cd_path = "assets/disc.cue";
     cfg->exp_path = NULL;
 }
 
@@ -229,7 +228,7 @@ void psxe_cfg_load(psxe_config_t* cfg, int argc, const char* argv[]) {
 
             toml_datum_t s_bios_override_file = toml_string_in(s_bios_table, "override_file");
 
-            if (s_bios_override_file.ok)
+            if (s_bios_override_file.ok && strlen(s_bios_override_file.u.s))
                 bios = s_bios_override_file.u.s;
         }
 

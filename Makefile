@@ -1,7 +1,7 @@
 .ONESHELL:
 
-CFLAGS := -g -DLOG_USE_COLOR `sdl2-config --cflags --libs`
-CFLAGS += -Ofast -Wno-overflow -Wall -pedantic -Wno-address-of-packed-member -flto
+CFLAGS := -m32 -g -DLOG_USE_COLOR `sdl2-config --cflags --libs`
+CFLAGS += -O2 -march=native -fomit-frame-pointer -Wno-overflow -Wall -pedantic -Wno-address-of-packed-member -flto -lm
 
 PLATFORM := $(shell uname -s)
 
@@ -20,10 +20,10 @@ SOURCES += $(wildcard psx/input/*.c)
 SOURCES += $(wildcard psx/disc/*.c)
 SOURCES += $(wildcard frontend/*.c)
 
-bin/psxe frontend/main.c:
-	mkdir -p bin
+psxe: $(SOURCES)
+	mkdir -p assets
 
-	gcc $(SOURCES) -o bin/psxe \
+	gcc $(SOURCES) -o psxe \
 		-I"." \
 		-I"psx" \
 		-DOS_INFO="$(OS_INFO)" \
@@ -32,4 +32,4 @@ bin/psxe frontend/main.c:
 		$(CFLAGS)
 
 clean:
-	rm -rf "bin"
+	rm -f psxe

@@ -6,6 +6,8 @@
 #include "screen.h"
 #include "config.h"
 
+#include <dirent.h>
+
 #undef main
 
 void audio_update(void* ud, uint8_t* buf, int size) {
@@ -38,15 +40,48 @@ int main(int argc, const char* argv[]) {
     log_set_level(cfg->log_level);
 
     psx_t* psx = psx_create();
-    psx_init(psx, cfg->bios, cfg->exp_path);
+
+    if (psx_init(psx, cfg->bios, cfg->exp_path)) {
+        log_fatal("Failed to initialize PSX (check BIOS path: %s)", cfg->bios);
+        return 1;
+    }
 
     psx_cdrom_t* cdrom = psx_get_cdrom(psx);
 
     // To-do: Set CDROM firmware version and region based
     //        on CLI options
 
-    if (cfg->cd_path)
-        psx_cdrom_open(cdrom, cfg->cd_path);
+    // Find a .cue file in assets/ if default disc path fails
+    {
+        int loaded = 0;
+
+        if (cfg->cd_path) {
+            FILE* f = fopen(cfg->cd_path, "r");
+            if (f) { fclose(f); loaded = psx_cdrom_open(cdrom, cfg->cd_path); }
+        }
+
+        if (!loaded) {
+            DIR* d = opendir("assets");
+            if (d) {
+                struct dirent* ent;
+                static char found[512];
+                while ((ent = readdir(d))) {
+                    const char* name = ent->d_name;
+                    size_t len = strlen(name);
+                    if (len > 4 && !strcmp(name + len - 4, ".cue")) {
+                        snprintf(found, sizeof(found), "assets/%s", name);
+                        cfg->cd_path = found;
+                        loaded = psx_cdrom_open(cdrom, cfg->cd_path);
+                        break;
+                    }
+                }
+                closedir(d);
+            }
+        }
+
+        if (!loaded)
+            log_info("No disc loaded");
+    }
 
     psxe_screen_t* screen = psxe_screen_create();
     psxe_screen_init(screen, psx);

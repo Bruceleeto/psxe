@@ -25,3 +25,6 @@ snap/
 *.mcd
 *.rom
 *.o
+docs/
+psxe
+assets/
