@@ -63,12 +63,8 @@ uint32_t psx_bus_read32(psx_bus_t* bus, uint32_t addr) {
 
     log_fatal("Unhandled 32-bit read from %08x:%08x", vaddr, addr);
 
-    //exit(1);
-
     return 0x00000000;
 }
-
-static uint16_t sio_ctrl;
 
 uint16_t psx_bus_read16(psx_bus_t* bus, uint32_t addr) {
     bus->access_cycles = 2;
@@ -98,29 +94,13 @@ uint16_t psx_bus_read16(psx_bus_t* bus, uint32_t addr) {
     HANDLE_READ(pad, 16);
     HANDLE_READ(mdec, 16);
 
-    if (addr == 0x1f80105a)
-        return sio_ctrl;
-
-    if (addr == 0x1f801054)
-        return 0x05;
-
-    if (addr == 0x1f400004)
-        return 0xc8;
-
-    if (addr == 0x1f400006)
-        return 0x1fe0;
-
-    printf("Unhandled 16-bit read from %08x:%08x\n", vaddr, addr);
-
-    // exit(1);
+    log_warn("Unhandled 16-bit read from %08x:%08x", vaddr, addr);
 
     return 0x0000;
 }
 
 uint8_t psx_bus_read8(psx_bus_t* bus, uint32_t addr) {
     bus->access_cycles = 2;
-
-    // uint32_t vaddr = addr;
 
     addr &= g_psx_bus_region_mask_table[addr >> 29];
 
@@ -140,10 +120,6 @@ uint8_t psx_bus_read8(psx_bus_t* bus, uint32_t addr) {
     HANDLE_READ(cdrom, 8);
     HANDLE_READ(pad, 8);
     HANDLE_READ(mdec, 8);
-
-    // printf("Unhandled 8-bit read from %08x:%08x\n", vaddr, addr);
-
-    //exit(1);
 
     return 0x00;
 }
@@ -176,9 +152,7 @@ void psx_bus_write32(psx_bus_t* bus, uint32_t addr, uint32_t value) {
     HANDLE_WRITE(pad, 32);
     HANDLE_WRITE(mdec, 32);
 
-    printf("Unhandled 32-bit write to %08x:%08x (%08x)\n", vaddr, addr, value);
-
-    //exit(1);
+    log_warn("Unhandled 32-bit write to %08x:%08x (%08x)", vaddr, addr, value);
 }
 
 
@@ -210,11 +184,7 @@ void psx_bus_write16(psx_bus_t* bus, uint32_t addr, uint32_t value) {
     HANDLE_WRITE(pad, 16);
     HANDLE_WRITE(mdec, 16);
 
-    // if (addr == 0x1f80105a) { sio_ctrl = value; return; }
-
-    printf("Unhandled 16-bit write to %08x:%08x (%04x)\n", vaddr, addr, value);
-
-    //exit(1);
+    log_warn("Unhandled 16-bit write to %08x:%08x (%04x)", vaddr, addr, value);
 }
 
 void psx_bus_write8(psx_bus_t* bus, uint32_t addr, uint32_t value) {
@@ -241,9 +211,7 @@ void psx_bus_write8(psx_bus_t* bus, uint32_t addr, uint32_t value) {
     HANDLE_WRITE(pad, 8);
     HANDLE_WRITE(mdec, 8);
 
-    printf("Unhandled 8-bit write to %08x:%08x (%02x)\n", vaddr, addr, value);
-
-    //exit(1);
+    log_warn("Unhandled 8-bit write to %08x:%08x (%02x)", vaddr, addr, value);
 }
 
 void psx_bus_init_bios(psx_bus_t* bus, psx_bios_t* bios) {

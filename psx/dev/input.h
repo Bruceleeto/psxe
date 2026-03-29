@@ -27,12 +27,6 @@ struct psx_input_t {
 
 psx_input_t* psx_input_create(void);
 void psx_input_init(psx_input_t*);
-void psx_input_set_write_func(psx_input_t*, psx_input_write_t);
-void psx_input_set_read_func(psx_input_t*, psx_input_read_t);
-void psx_input_set_on_button_press_func(psx_input_t*, psx_input_on_button_press_t);
-void psx_input_set_on_button_release_func(psx_input_t*, psx_input_on_button_release_t);
-void psx_input_set_on_analog_change_func(psx_input_t*, psx_input_on_analog_change_t);
-void psx_input_set_query_fifo_func(psx_input_t*, psx_input_query_fifo_t);
 void psx_input_destroy(psx_input_t*);
 
 #endif

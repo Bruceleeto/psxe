@@ -8,18 +8,6 @@ int psx_load_bios(psx_t* psx, const char* path) {
     return psx_bios_load(psx->bios, path);
 }
 
-void psx_load_state(psx_t* psx, const char* path) {
-    log_fatal("State saving/loading is not yet supported");
-
-    exit(1);
-}
-
-void psx_save_state(psx_t* psx, const char* path) {
-    log_fatal("State saving/loading is not yet supported");
-
-    exit(1);
-}
-
 void psx_load_exe(psx_t* psx, const char* path) {
     psx_exe_load(psx->cpu, path);
 }
@@ -187,20 +175,8 @@ int psx_load_expansion(psx_t* psx, const char* path) {
     return psx_exp1_init(psx->exp1, psx->mc1, path);
 }
 
-void psx_hard_reset(psx_t* psx) {
-    log_fatal("Hard reset not yet implemented");
-
-    exit(1);
-}
-
 void psx_soft_reset(psx_t* psx) {
     psx_cpu_init(psx->cpu, psx->bus);
-}
-
-uint32_t* psx_take_screenshot(psx_t* psx) {
-    log_fatal("Screenshots not yet supported");
-
-    exit(1);
 }
 
 int psx_swap_disc(psx_t* psx, const char* path) {
